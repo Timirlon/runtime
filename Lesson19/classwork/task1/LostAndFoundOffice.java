@@ -10,10 +10,6 @@ public class LostAndFoundOffice {
        things.add(thing);
     }
     boolean check (Object thing) {
-        if (thing != null) {
-            return things.contains(thing);
-        } else {
-            return false;
-        }
+        return things.contains(thing);
     }
 }
