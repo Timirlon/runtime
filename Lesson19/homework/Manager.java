@@ -84,7 +84,7 @@ public class Manager {
     public void removeEpicById (int id) {
         for (Epic epic : epics) {
             if (epic.getId() == id) {
-                tasks.remove(epic);
+                epics.remove(epic);
                 System.out.println("Эпик удален.");
                 return;
             }
@@ -95,7 +95,7 @@ public class Manager {
     public void removeSubtaskById (int id) {
         for (Subtask subtask : subtasks) {
             if (subtask.getId() == id) {
-                tasks.remove(subtask);
+                subtasks.remove(subtask);
                 System.out.println("Подзадача удалена.");
                 return;
             }

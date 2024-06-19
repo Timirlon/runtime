@@ -18,23 +18,24 @@ public class Epic extends Task {
         int newStatus = 0;
         int doneStatus = 0;
         if (subtasks.isEmpty()) {
-            this.setStatus("NEW");
+            this.setStatus(Status.NEW);
+            return;
         }
 
         for (Subtask subtask : subtasks) {
-            if (subtask.getStatus().equals("NEW")) {
+            if (subtask.getStatus() == Status.NEW) {
                 newStatus++;
-            } else if (subtask.getStatus().equals("DONE")) {
+            } else if (subtask.getStatus() == Status.DONE) {
                 doneStatus++;
             }
         }
 
         if (newStatus == subtasks.size()) {
-            this.setStatus("NEW");
+            this.setStatus(Status.NEW);
         } else if (doneStatus == subtasks.size()) {
-            this.setStatus("DONE");
+            this.setStatus(Status.DONE);
         } else {
-            this.setStatus("IN PROGRESS");
+            this.setStatus(Status.IN_PROGRESS);
         }
     }
 }

@@ -29,17 +29,18 @@ public class Main {
         System.out.println(taskManager.getSubtasks());
 
         System.out.println(school.getStatus());
-        school.setStatus("DONE");
+        school.setStatus(Status.DONE);
         System.out.println(school.getStatus());
 
-        System.out.println(dishes.getStatus() + " " + cleaning.getStatus());
-        dishes.setStatus("DONE");
-        System.out.println(dishes.getStatus() + " " + cleaning.getStatus());
+        System.out.println(dishes.getStatus() + " " + cleaning.getStatus().name());
+        dishes.setStatus(Status.DONE);
+        System.out.println(dishes.getStatus() + " " + cleaning.getStatus().name());
 
-        System.out.println(packing.getStatus() + " " + movingOut.getStatus());
-        packing.setStatus("DONE");
-        System.out.println(packing.getStatus() + " " + movingOut.getStatus());
+        System.out.println(packing.getStatus() + " " + movingOut.getStatus().name());
+        packing.setStatus(Status.DONE);
+        System.out.println(packing.getStatus() + " " + movingOut.getStatus().name());
 
-        taskManager.removeSubtaskById(7);
+        taskManager.removeSubtaskById(5);
+        taskManager.getSubtaskById(5);
     }
 }
