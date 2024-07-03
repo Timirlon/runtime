@@ -1,32 +1,32 @@
-package Lesson19.homework;
+package Lesson19.homework.task_tracker;
 
 public class Main {
     public static void main(String[] args) {
-        Manager taskManager = new Manager();
+        InMemoryTaskManager taskInMemoryTaskManager = new InMemoryTaskManager();
 
         Task school = new Task("Сходить в школу", "Описание задачи");
         Task groceries = new Task("Купить продукты", "Описание задачи");
-        taskManager.createTask(school);
-        taskManager.createTask(groceries);
+        taskInMemoryTaskManager.createTask(school);
+        taskInMemoryTaskManager.createTask(groceries);
 
-        System.out.println(taskManager.getTasks());
+        System.out.println(taskInMemoryTaskManager.getTasks());
 
 
         Epic cleaning = new Epic("Убраться дома", "Описание эпика");
-        taskManager.createEpic(cleaning);
+        taskInMemoryTaskManager.createEpic(cleaning);
         Epic movingOut = new Epic("Переезд", "Описание эпика");
-        taskManager.createEpic(movingOut);
+        taskInMemoryTaskManager.createEpic(movingOut);
 
-        System.out.println(taskManager.getEpics());
+        System.out.println(taskInMemoryTaskManager.getEpics());
 
         Subtask dishes = new Subtask("Помыть посуду", "Описание подзадачи", cleaning);
         Subtask vacuum = new Subtask("Пропылесосить", "Описание подзадачи", cleaning);
         Subtask packing = new Subtask("Упаковать вещи", "Описание подзадачи", movingOut);
-        taskManager.createSubtask(dishes);
-        taskManager.createSubtask(vacuum);
-        taskManager.createSubtask(packing);
+        taskInMemoryTaskManager.createSubtask(dishes);
+        taskInMemoryTaskManager.createSubtask(vacuum);
+        taskInMemoryTaskManager.createSubtask(packing);
 
-        System.out.println(taskManager.getSubtasks());
+        System.out.println(taskInMemoryTaskManager.getSubtasks());
 
         System.out.println(school.getStatus());
         school.setStatus(Status.DONE);
@@ -40,7 +40,9 @@ public class Main {
         packing.setStatus(Status.DONE);
         System.out.println(packing.getStatus() + " " + movingOut.getStatus().name());
 
-        taskManager.removeSubtaskById(5);
-        taskManager.getSubtaskById(5);
+        taskInMemoryTaskManager.removeSubtaskById(5);
+        taskInMemoryTaskManager.getSubtaskById(5);
+
+        taskInMemoryTaskManager.getHistory();
     }
 }
