@@ -37,7 +37,7 @@ public class Main {
                     continue;
                 }
 
-                if (currentMovie.genre.equals(movies.get(movieId).genre) || movies.get(movieId).actors.contains(currentMovie.actors.get(0)) || movies.get(movieId).actors.contains(currentMovie.actors.get(1)) || currentMovie.director.equals(movies.get(movieId).director)) {
+                if (currentMovie.genre.equals(movies.get(movieId).genre) || movies.get(movieId).actors.containsAll(currentMovie.actors) || currentMovie.director.equals(movies.get(movieId).director)) {
                     recommendedMovies.add(currentMovie);
                 }
             }
