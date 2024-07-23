@@ -17,8 +17,8 @@ public class Main {
 
         users.put(1, new User(1, "John Doe", 1, 2));
 
-        List<Movie> ListOfRecommenderMovies = recommendMovies(1, 3);
-        for (Movie movie : ListOfRecommenderMovies) {
+        List<Movie> listOfRecommenderMovies = recommendMovies(1, 3);
+        for (Movie movie : listOfRecommenderMovies) {
             System.out.println("id: " + movie.id + ", title: " + movie.title);
         }
     }
