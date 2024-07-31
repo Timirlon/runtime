@@ -1,10 +1,9 @@
-package Lesson19.classwork.task2;
-
-import Lesson19.classwork.task3.Item;
+package Lesson19.classwork.task3;
 
 public class Practice {
     public static void main(String[] args) {
         Item item = new Item();
+
 
         Song theRockBandSong = new Song("Popular Song", "The Rock Band", "John Doe");
         Song johnDoeSong = new Song("Popular Song", "The Rock Band", "John Doe");

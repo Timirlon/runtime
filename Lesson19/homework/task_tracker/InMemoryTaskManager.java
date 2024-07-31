@@ -1,6 +1,7 @@
 package Lesson19.homework.task_tracker;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getHistory() {
-        return history;
+        return historyManager.getHistory();
     }
 
     public HashMap<Integer, Task> getTasks() {
