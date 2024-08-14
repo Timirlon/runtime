@@ -1,9 +1,11 @@
 package Lesson37_exceptions_and_files.homework.task3;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Scanner;
 
 public class Practice {
@@ -25,7 +27,9 @@ public class Practice {
                     System.out.println("Выход.");
                     break while_loop;
                 case "ls":
-
+                    for (File file : path.toFile().listFiles()) {
+                        System.out.println(file);
+                    }
                     break;
 
                 case "mkdir":
@@ -53,8 +57,7 @@ public class Practice {
                     String newName = scanner.nextLine();
 
                     try {
-                        Path newPath = Paths.get(enteredPath, newName);
-                        Files.copy(newPath, path);
+                        Files.move(path, path.resolveSibling(newName), StandardCopyOption.REPLACE_EXISTING);
                         // переименуйте файл
                     }
                     catch (IOException e) {
