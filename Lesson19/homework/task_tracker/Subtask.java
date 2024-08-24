@@ -7,6 +7,7 @@ public class Subtask extends Task {
         super(title, description);
         this.epic = epic;
         epic.getSubtasks().add(this);
+        setType(Type.SUBTASK);
     }
 
     public Epic getEpic () {
@@ -17,5 +18,10 @@ public class Subtask extends Task {
     public void setStatus(Status status) {
         super.setStatus(status);
         epic.setStatusForEpic();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "," + getEpic();
     }
 }

@@ -5,11 +5,13 @@ public class Task {
     private String title;
     private String description;
     private Status status;
+    private Type type;
 
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
+        setType(Type.TASK);
     }
 
     public int getId() {
@@ -42,5 +44,18 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return getId() + "," + getType() + "," + getTitle() + "," + getStatus() + "," + getDescription();
     }
 }
