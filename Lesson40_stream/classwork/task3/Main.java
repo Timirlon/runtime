@@ -1,7 +1,6 @@
 package Lesson40_stream.classwork.task3;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.OptionalInt;
 
@@ -45,14 +44,12 @@ public class Main {
                 .forEach(product -> System.out.println(product.name() + " - " + product.price() + " тенге"));
 
         // task 2
-        Comparator<Product> comparator = (product1, product2) -> product2.price() - product1.price();
-
 
         OptionalInt totalPrice = products.stream()
                 .filter(product -> product.type() == ProductType.MEAT || product.type() == ProductType.DAIRY)
                 .map(product -> new Product(product.name(), product.price() - product.price() / 10, product.type()))
                 .filter(product -> product.price() > 2000)
-                .sorted(comparator)
+                .sorted((product1, product2) -> product2.price() - product1.price())
                 .peek(product -> System.out.println(product.name() + " - " + product.price() + " тенге"))
                 .mapToInt(product -> product.price())
                 .reduce((product1, product2) -> product1 + product2);
