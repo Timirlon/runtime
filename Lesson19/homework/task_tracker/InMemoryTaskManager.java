@@ -40,7 +40,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById (int id) {
+    public Task getTaskById(int id) {
         if(tasks.containsKey(id)) {
             historyManager.add(tasks.get(id));
             System.out.println("Название задания: " + tasks.get(id).getTitle());
@@ -51,7 +51,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic getEpicById (int id) {
+    public Epic getEpicById(int id) {
         if(epics.containsKey(id)) {
             historyManager.add(epics.get(id));
             System.out.println("Название задания: " + epics.get(id).getTitle());
@@ -62,7 +62,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask getSubtaskById (int id) {
+    public Subtask getSubtaskById(int id) {
         if(subtasks.containsKey(id)) {
             historyManager.add(subtasks.get(id));
             System.out.println("Название задания: " + subtasks.get(id).getTitle());

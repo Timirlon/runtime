@@ -1,15 +1,14 @@
 package Lesson19.homework.task_tracker;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     public void save() {
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(""));
+            Writer writer = new FileWriter("Lesson19\\homework\\for_task_tracker");
         } catch (IOException io) {
             throw new ManagerSaveException();
         }
@@ -30,6 +29,48 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void createEpic(Epic epic) {
         super.createEpic(epic);
+        save();
+    }
+
+    @Override
+    public Task getTaskById(int id) {
+        save();
+        return super.getTaskById(id);
+    }
+
+    @Override
+    public Epic getEpicById(int id) {
+        save();
+        return super.getEpicById(id);
+    }
+
+    @Override
+    public Subtask getSubtaskById(int id) {
+        save();
+        return super.getSubtaskById(id);
+    }
+
+    @Override
+    public void update(int id, Task updatedTask) {
+        super.update(id, updatedTask);
+        save();
+    }
+
+    @Override
+    public void removeTaskById(int id) {
+        super.removeTaskById(id);
+        save();
+    }
+
+    @Override
+    public void removeEpicById(int id) {
+        super.removeEpicById(id);
+        save();
+    }
+
+    @Override
+    public void removeSubtaskById(int id) {
+        super.removeSubtaskById(id);
         save();
     }
 
@@ -69,4 +110,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         return history;
     }
+
+
+    static FileBackedTaskManager loadFromFile(Path path) throws IOException {
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager();
+        BufferedReader bufferedReader = new BufferedReader(new FileReader("Lesson19\\homework\\for_task_tracker"));
+        bufferedReader.readLine();
+
+        List<String> stringList = new ArrayList<>();
+        while (bufferedReader.ready()) {
+            stringList.add(bufferedReader.readLine());
+        }
+
+
+
+        return fileBackedTaskManager;
+    }
+
 }
