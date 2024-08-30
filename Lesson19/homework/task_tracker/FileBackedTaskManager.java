@@ -4,11 +4,37 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
+    private final Path path;
+
+    public FileBackedTaskManager(Path path) {
+        this.path = path;
+    }
     public void save() {
         try {
-            Writer writer = new FileWriter("Lesson19\\homework\\for_task_tracker");
+            Writer writer = new FileWriter(path.toFile()); //"Lesson19\\homework\\for_task_tracker"
+
+            writer.write("id,type,name,status,description,epic\n");
+
+            for (Map.Entry<Integer, Task> entrySet : getTasks().entrySet()) {
+                writer.write(toString(entrySet.getValue()));
+                writer.write("\n");
+            }
+
+            for (Map.Entry<Integer, Epic> entrySet : getEpics().entrySet()) {
+                writer.write(toString(entrySet.getValue()));
+                writer.write("\n");
+            }
+
+            for (Map.Entry<Integer, Subtask> entrySet : getSubtasks().entrySet()) {
+                writer.write(toString(entrySet.getValue()));
+                writer.write("\n");
+            }
+
+            writer.close();
+
         } catch (IOException io) {
             throw new ManagerSaveException();
         }
@@ -99,9 +125,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return task;
     }
 
-    static String historyToString(HistoryManager manager) {
-        String string = "";
-        return string;
+    static String historyToString(HistoryManager historyManager) {
+        List<Task> history = historyManager.getHistory();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Task task : history) {
+            stringBuilder.append(task.toString());
+            stringBuilder.append("\n");
+        }
+
+        return stringBuilder.toString();
     }
 
     static List<Integer> historyFromString(String value) {
@@ -111,20 +144,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return history;
     }
 
-
     static FileBackedTaskManager loadFromFile(Path path) throws IOException {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager();
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("Lesson19\\homework\\for_task_tracker"));
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(/*Managers.getDefault()*/ path);
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()));
         bufferedReader.readLine();
 
-        List<String> stringList = new ArrayList<>();
         while (bufferedReader.ready()) {
-            stringList.add(bufferedReader.readLine());
+            Task task = fileBackedTaskManager.fromString(bufferedReader.readLine());
+            fileBackedTaskManager.getTasks().put(task.getId(), task);
         }
-
-
 
         return fileBackedTaskManager;
     }
-
 }
