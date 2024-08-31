@@ -159,7 +159,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public static void main(String[] args) throws IOException {
-        FileBackedTaskManager fbtm = loadFromFile(Path.of("Lesson19\\homework\\for_task_tracker\\history.csv"));
+        FileBackedTaskManager fbtm = loadFromFile(Managers.getPath());
 
         System.out.println(fbtm.getHistory());
 
