@@ -14,7 +14,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
     public void save() {
         try {
-            Writer writer = new FileWriter(path.toFile()); //"Lesson19\\homework\\for_task_tracker"
+            Writer writer = new FileWriter(path.toFile()); //""
 
             writer.write("id,type,name,status,description,epic\n");
 
@@ -38,6 +38,64 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } catch (IOException io) {
             throw new ManagerSaveException();
         }
+    }
+
+    public String toString(Task task) {
+        return task.toString();
+    }
+
+    public Task fromString(String value) {
+        String[] split = value.split(",");
+        Task task;
+        if (split[1].equals(Type.TASK.name())) {
+            task = new Task(split[2], split[4]);
+            task.setType(Type.TASK);
+        } else if (split[1].equals(Type.EPIC.name())) {
+            task = new Epic(split[2], split[4]);
+            task.setType(Type.EPIC);
+        } else if (split[1].equals(Type.SUBTASK.name())) {
+            task = new Subtask(split[2], split[4], getEpics().get(Integer.parseInt(split[5])));
+            task.setType(Type.SUBTASK);
+        } else {
+            return null;
+        }
+        task.setId(Integer.parseInt(split[0]));
+        task.setStatus(split[3].equals(Status.DONE.name()) ? Status.DONE : split[1].equals(Status.NEW.name()) ? Status.NEW : split[1].equals(Status.IN_PROGRESS.name()) ? Status.IN_PROGRESS : null);
+
+        return task;
+    }
+
+    static String historyToString(HistoryManager historyManager) {
+        List<Task> history = historyManager.getHistory();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Task task : history) {
+            stringBuilder.append(task.toString());
+            stringBuilder.append("\n");
+        }
+
+        return stringBuilder.toString();
+    }
+
+    static List<Integer> historyFromString(String value) {
+        List<Integer> history = new ArrayList<>();
+        String[] split = value.split("\n");
+
+        return history;
+    }
+
+    static FileBackedTaskManager loadFromFile(Path path) throws IOException {
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(/*new Managers.getDefault()*/ path);
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()));
+        bufferedReader.readLine();
+
+        while (bufferedReader.ready()) {
+            Task task = fileBackedTaskManager.fromString(bufferedReader.readLine());
+            fileBackedTaskManager.createTask(task);
+        }
+
+        return fileBackedTaskManager;
+
     }
 
     @Override
@@ -100,60 +158,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    public String toString(Task task) {
-        return task.toString();
-    }
+    public static void main(String[] args) throws IOException {
+        FileBackedTaskManager fbtm = loadFromFile(Path.of("Lesson19\\homework\\for_task_tracker\\history.csv"));
 
-    public Task fromString(String value) {
-        String[] split = value.split(",");
-        Task task;
-        if (split[1].equals(Type.TASK.name())) {
-            task = new Task(split[2], split[4]);
-            task.setType(Type.TASK);
-        } else if (split[1].equals(Type.EPIC.name())) {
-            task = new Epic(split[2], split[4]);
-            task.setType(Type.EPIC);
-        } else if (split[1].equals(Type.SUBTASK.name())) {
-            task = new Subtask(split[2], split[4], getEpics().get(Integer.parseInt(split[5])));
-            task.setType(Type.SUBTASK);
-        } else {
-            return null;
-        }
-        task.setId(Integer.parseInt(split[0]));
-        task.setStatus(split[3].equals(Status.DONE.name()) ? Status.DONE : split[1].equals(Status.NEW.name()) ? Status.NEW : split[1].equals(Status.IN_PROGRESS.name()) ? Status.IN_PROGRESS : null);
+        System.out.println(fbtm.getHistory());
 
-        return task;
-    }
+        Epic epic = new Epic("Подготовиться к школе", "Описание эпика");
+        fbtm.createEpic(epic);
+        fbtm.createSubtask(new Subtask("Сделать уроки", "Описание подзадачи", epic));
+        fbtm.createSubtask(new Subtask("Приготовить форму", "Описание подзадачи", epic));
 
-    static String historyToString(HistoryManager historyManager) {
-        List<Task> history = historyManager.getHistory();
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for (Task task : history) {
-            stringBuilder.append(task.toString());
-            stringBuilder.append("\n");
-        }
-
-        return stringBuilder.toString();
-    }
-
-    static List<Integer> historyFromString(String value) {
-        List<Integer> history = new ArrayList<>();
-        String[] split = value.split("\n");
-
-        return history;
-    }
-
-    static FileBackedTaskManager loadFromFile(Path path) throws IOException {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(/*Managers.getDefault()*/ path);
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()));
-        bufferedReader.readLine();
-
-        while (bufferedReader.ready()) {
-            Task task = fileBackedTaskManager.fromString(bufferedReader.readLine());
-            fileBackedTaskManager.getTasks().put(task.getId(), task);
-        }
-
-        return fileBackedTaskManager;
+        System.out.println(fbtm.getHistory());
     }
 }

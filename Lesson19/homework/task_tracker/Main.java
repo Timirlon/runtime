@@ -3,7 +3,6 @@ package Lesson19.homework.task_tracker;
 public class Main {
     public static void main(String[] args) {
         InMemoryTaskManager taskInMemoryTaskManager = new InMemoryTaskManager();
-        //InMemoryHistoryManager historyManager = taskInMemoryTaskManager.getHistory();
 
         Task school = new Task("Сходить в школу", "Описание задачи");
         Task groceries = new Task("Купить продукты", "Описание задачи");
@@ -42,6 +41,7 @@ public class Main {
         System.out.println(packing.getStatus() + " " + movingOut.getStatus().name());
 
         taskInMemoryTaskManager.removeSubtaskById(5);
-        taskInMemoryTaskManager.getSubtaskById(5);
+
+        System.out.println(taskInMemoryTaskManager.getHistory());
     }
 }
