@@ -1,10 +1,11 @@
-package Lesson19.homework.task_tracker;
+package Lesson19.homework.task_tracker.service;
 
+import Lesson19.homework.task_tracker.model.*;
+import Lesson19.homework.task_tracker.utils.*;
 import java.io.*;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final Path path;
@@ -46,21 +47,30 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public Task fromString(String value) {
         String[] split = value.split(",");
+        int taskId = Integer.parseInt(split[0]);
+        Type type = Type.valueOf(split[1]);
+        String name = split[2];
+        Status status = Status.valueOf(split[3]);
+        String description = split[4];
         Task task;
-        if (split[1].equals(Type.TASK.name())) {
-            task = new Task(split[2], split[4]);
-            task.setType(Type.TASK);
-        } else if (split[1].equals(Type.EPIC.name())) {
-            task = new Epic(split[2], split[4]);
-            task.setType(Type.EPIC);
-        } else if (split[1].equals(Type.SUBTASK.name())) {
-            task = new Subtask(split[2], split[4], getEpics().get(Integer.parseInt(split[5])));
-            task.setType(Type.SUBTASK);
-        } else {
-            return null;
+        switch (type) {
+            case TASK:
+                task = new Task(name, description);
+                task.setType(Type.TASK);
+                break;
+            case EPIC:
+                task = new Epic(name, description);
+                task.setType(Type.EPIC);
+                break;
+            case SUBTASK:
+                int epicId = Integer.parseInt(split[5]);
+                task = new Subtask(name, description, epics.get(epicId));
+                task.setType(Type.SUBTASK);
+            default:
+                return null;
         }
-        task.setId(Integer.parseInt(split[0]));
-        task.setStatus(split[3].equals(Status.DONE.name()) ? Status.DONE : split[1].equals(Status.NEW.name()) ? Status.NEW : split[1].equals(Status.IN_PROGRESS.name()) ? Status.IN_PROGRESS : null);
+        task.setId(taskId);
+        task.setStatus(status);
 
         return task;
     }
@@ -77,21 +87,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return stringBuilder.toString();
     }
 
-    static List<Integer> historyFromString(String value) {
-        List<Integer> history = new ArrayList<>();
-        String[] split = value.split("\n");
-
-        return history;
-    }
-
     static FileBackedTaskManager loadFromFile(Path path) throws IOException {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(/*new Managers.getDefault()*/ path);
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(/*Managers.getDefault()*/ path);
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()));
         bufferedReader.readLine();
 
         while (bufferedReader.ready()) {
             Task task = fileBackedTaskManager.fromString(bufferedReader.readLine());
-            fileBackedTaskManager.createTask(task);
+
+            switch (task.getType()) {
+                case TASK:
+                    fileBackedTaskManager.tasks.put(task.getId(), task);
+                    break;
+                case EPIC:
+                    fileBackedTaskManager.epics.put(task.getId(), (Epic) task);
+                    break;
+                case SUBTASK:
+                    fileBackedTaskManager.subtasks.put(task.getId(), (Subtask) task);
+                    break;
+            }
         }
 
         return fileBackedTaskManager;
@@ -163,10 +177,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         System.out.println(fbtm.getHistory());
 
-        Epic epic = new Epic("Подготовиться к школе", "Описание эпика");
-        fbtm.createEpic(epic);
-        fbtm.createSubtask(new Subtask("Сделать уроки", "Описание подзадачи", epic));
-        fbtm.createSubtask(new Subtask("Приготовить форму", "Описание подзадачи", epic));
+        fbtm.createSubtask(new Subtask("Лечь пораньше", "Ты потом не сможешь встать!", fbtm.epics.get(1)));
 
         System.out.println(fbtm.getHistory());
     }

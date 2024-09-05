@@ -1,16 +1,19 @@
-package Lesson19.homework.task_tracker;
+package Lesson19.homework.task_tracker.service;
 
-import java.util.ArrayList;
+import Lesson19.homework.task_tracker.model.Epic;
+import Lesson19.homework.task_tracker.model.Subtask;
+import Lesson19.homework.task_tracker.model.Task;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private int uniqueId = 1;
-    private Map<Integer, Task> tasks = new HashMap<>();;
-    private Map<Integer, Epic> epics = new HashMap<>();
-    private Map<Integer, Subtask> subtasks = new HashMap<>();
-    private HistoryManager historyManager = new InMemoryHistoryManager();
+    protected Map<Integer, Task> tasks = new HashMap<>();;
+    protected Map<Integer, Epic> epics = new HashMap<>();
+    protected Map<Integer, Subtask> subtasks = new HashMap<>();
+    protected HistoryManager historyManager = new InMemoryHistoryManager();
 
     @Override
     public List<Task> getHistory() {
@@ -83,7 +86,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTaskById (int id) {
         if (tasks.containsKey(id)) {
-            historyManager.add(tasks.get(id)); //добавляем в историю
+            historyManager.add(tasks.get(id));
             tasks.remove(id);
             System.out.println("Задача удалена.");
             return;
@@ -94,7 +97,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeEpicById (int id) {
         if (epics.containsKey(id)) {
-            historyManager.add(epics.get(id)); //добавляем в историю
+            historyManager.add(epics.get(id));
             epics.remove(id);
             System.out.println("Эпик удален.");
             return;
@@ -105,7 +108,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeSubtaskById (int id) {
         if (subtasks.containsKey(id)) {
-            historyManager.add(subtasks.get(id)); //добавляем в историю
+            historyManager.add(subtasks.get(id));
             subtasks.remove(id);
             System.out.println("Подзадача удалена.");
             return;

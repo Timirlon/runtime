@@ -1,4 +1,10 @@
-package Lesson19.homework.task_tracker;
+package Lesson19.homework.task_tracker.test;
+
+import Lesson19.homework.task_tracker.model.Epic;
+import Lesson19.homework.task_tracker.model.Status;
+import Lesson19.homework.task_tracker.model.Subtask;
+import Lesson19.homework.task_tracker.model.Task;
+import Lesson19.homework.task_tracker.service.InMemoryTaskManager;
 
 public class Main {
     public static void main(String[] args) {

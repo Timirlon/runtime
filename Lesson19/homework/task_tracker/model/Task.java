@@ -1,4 +1,4 @@
-package Lesson19.homework.task_tracker;
+package Lesson19.homework.task_tracker.model;
 
 public class Task {
     private int id;
@@ -11,9 +11,9 @@ public class Task {
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
-        setType(Type.TASK);
+        this.type = Type.TASK;
     }
-
+    //можно создать конструктор для восстановления из файла
     public int getId() {
         return id;
     }

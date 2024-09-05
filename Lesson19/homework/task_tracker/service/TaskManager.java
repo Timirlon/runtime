@@ -1,4 +1,8 @@
-package Lesson19.homework.task_tracker;
+package Lesson19.homework.task_tracker.service;
+
+import Lesson19.homework.task_tracker.model.Epic;
+import Lesson19.homework.task_tracker.model.Subtask;
+import Lesson19.homework.task_tracker.model.Task;
 
 import java.util.Map;
 import java.util.List;
