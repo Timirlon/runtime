@@ -1,4 +1,4 @@
-package Lesson43_time_and_date.homework.task2;
+package Lesson43_time_and_date_formatter.homework.task2;
 
 import java.time.Duration;
 import java.time.LocalTime;

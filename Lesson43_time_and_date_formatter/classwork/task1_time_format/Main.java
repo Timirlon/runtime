@@ -1,4 +1,4 @@
-package Lesson43_time_and_date.classwork.task1_time_format;
+package Lesson43_time_and_date_formatter.classwork.task1_time_format;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
