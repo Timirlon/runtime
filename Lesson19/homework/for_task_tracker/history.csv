@@ -1,4 +1,5 @@
 id,type,name,status,description,epic
-1,EPIC,Подготовиться к школе,NEW,Описание эпика
-2,SUBTASK,Сделать уроки,NEW,Описание подзадачи,1
-3,SUBTASK,Приготовить форму,NEW,Описание подзадачи,1
+1,TASK,Сходить в магазин,NEW,default
+2,EPIC,Убраться дома,NEW,пора навести порядок!
+3,SUBTASK,Помыть посуду,NEW,default,2
+4,SUBTASK,Пропылесосить,NEW,default,2

@@ -15,22 +15,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
     public void save() {
         try {
-            Writer writer = new FileWriter(path.toFile()); //""
+            Writer writer = new FileWriter(path.toFile());
 
             writer.write("id,type,name,status,description,epic\n");
 
             for (Map.Entry<Integer, Task> entrySet : getTasks().entrySet()) {
-                writer.write(toString(entrySet.getValue()));
+                writer.write(entrySet.getValue().toString());
                 writer.write("\n");
             }
 
             for (Map.Entry<Integer, Epic> entrySet : getEpics().entrySet()) {
-                writer.write(toString(entrySet.getValue()));
+                writer.write(entrySet.getValue().toString());
                 writer.write("\n");
             }
 
             for (Map.Entry<Integer, Subtask> entrySet : getSubtasks().entrySet()) {
-                writer.write(toString(entrySet.getValue()));
+                writer.write(entrySet.getValue().toString());
                 writer.write("\n");
             }
 
@@ -41,11 +41,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public String toString(Task task) {
-        return task.toString();
-    }
-
-    public Task fromString(String value) {
+    public Task getTaskFromString(String value) {
         String[] split = value.split(",");
         int taskId = Integer.parseInt(split[0]);
         Type type = Type.valueOf(split[1]);
@@ -55,17 +51,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Task task;
         switch (type) {
             case TASK:
-                task = new Task(name, description);
-                task.setType(Type.TASK);
+                task = new Task(taskId, name, description, status);
                 break;
             case EPIC:
-                task = new Epic(name, description);
-                task.setType(Type.EPIC);
+                task = new Epic(taskId, name, description, status);
                 break;
             case SUBTASK:
                 int epicId = Integer.parseInt(split[5]);
-                task = new Subtask(name, description, epics.get(epicId));
-                task.setType(Type.SUBTASK);
+                task = new Subtask(taskId ,name, description, status, getEpicById(epicId));
             default:
                 return null;
         }
@@ -93,7 +86,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         bufferedReader.readLine();
 
         while (bufferedReader.ready()) {
-            Task task = fileBackedTaskManager.fromString(bufferedReader.readLine());
+            Task task = fileBackedTaskManager.getTaskFromString(bufferedReader.readLine());
 
             switch (task.getType()) {
                 case TASK:
@@ -177,7 +170,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         System.out.println(fbtm.getHistory());
 
-        fbtm.createSubtask(new Subtask("Лечь пораньше", "Ты потом не сможешь встать!", fbtm.epics.get(1)));
+        fbtm.createTask(new Task("Сходить в магазин", "default"));
+        fbtm.createEpic(new Epic("Убраться дома", "пора навести порядок!"));
+
+        fbtm.createSubtask(new Subtask("Помыть посуду", "default", fbtm.epics.get(2)));
+        fbtm.createSubtask(new Subtask("Пропылесосить", "default", fbtm.epics.get(2)));
 
         System.out.println(fbtm.getHistory());
     }

@@ -1,13 +1,19 @@
 package Lesson19.homework.task_tracker.model;
 
 public class Subtask extends Task {
-    private Epic epic;
+    private final Epic epic;
 
     public Subtask(String title, String description, Epic epic) {
         super(title, description);
         this.epic = epic;
         epic.getSubtasks().add(this);
         setType(Type.SUBTASK);
+    }
+
+    public Subtask(int id, String title, String description, Status status, Epic epic) {
+        super(id, title, description, status);
+        this.epic = epic;
+        type = Type.SUBTASK;
     }
 
     public Epic getEpic () {

@@ -3,12 +3,17 @@ package Lesson19.homework.task_tracker.model;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private ArrayList<Subtask> subtasks = new ArrayList<>();
+    private final ArrayList<Subtask> subtasks = new ArrayList<>();
 
     public Epic(String title, String description) {
         super(title, description);
         this.setStatusForEpic();
         setType(Type.EPIC);
+    }
+
+    public Epic(int id, String title, String description, Status status) {
+        super(id, title, description, status);
+        this.type = Type.EPIC;
     }
 
     public ArrayList<Subtask> getSubtasks() {

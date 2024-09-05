@@ -1,19 +1,27 @@
 package Lesson19.homework.task_tracker.model;
 
 public class Task {
-    private int id;
-    private String title;
-    private String description;
-    private Status status;
-    private Type type;
+    protected int id;
+    protected String title;
+    protected String description;
+    protected Status status;
+    protected Type type;
 
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
+        type = Type.TASK;
+    }
+
+    public Task(int id, String title, String description, Status status) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
         this.type = Type.TASK;
     }
-    //можно создать конструктор для восстановления из файла
+
     public int getId() {
         return id;
     }
