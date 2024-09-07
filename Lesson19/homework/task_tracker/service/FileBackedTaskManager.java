@@ -58,7 +58,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 break;
             case SUBTASK:
                 int epicId = Integer.parseInt(split[5]);
-                task = new Subtask(taskId ,name, description, status, getEpicById(epicId));
+                task = new Subtask(taskId ,name, description, status, epics.get(epicId));
+                break;
             default:
                 return null;
         }
@@ -81,7 +82,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     static FileBackedTaskManager loadFromFile(Path path) throws IOException {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(/*Managers.getDefault()*/ path);
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(path);
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()));
         bufferedReader.readLine();
 
@@ -99,8 +100,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     fileBackedTaskManager.subtasks.put(task.getId(), (Subtask) task);
                     break;
             }
-        }
 
+            fileBackedTaskManager.historyManager.add(task);
+        }
+        bufferedReader.close();
         return fileBackedTaskManager;
 
     }
@@ -167,14 +170,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static void main(String[] args) throws IOException {
         FileBackedTaskManager fbtm = loadFromFile(Managers.getPath());
-
-        System.out.println(fbtm.getHistory());
-
-        fbtm.createTask(new Task("Сходить в магазин", "default"));
-        fbtm.createEpic(new Epic("Убраться дома", "пора навести порядок!"));
-
-        fbtm.createSubtask(new Subtask("Помыть посуду", "default", fbtm.epics.get(2)));
-        fbtm.createSubtask(new Subtask("Пропылесосить", "default", fbtm.epics.get(2)));
 
         System.out.println(fbtm.getHistory());
     }

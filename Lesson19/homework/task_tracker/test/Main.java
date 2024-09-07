@@ -5,10 +5,12 @@ import Lesson19.homework.task_tracker.model.Status;
 import Lesson19.homework.task_tracker.model.Subtask;
 import Lesson19.homework.task_tracker.model.Task;
 import Lesson19.homework.task_tracker.service.InMemoryTaskManager;
+import Lesson19.homework.task_tracker.service.TaskManager;
+import Lesson19.homework.task_tracker.utils.Managers;
 
 public class Main {
     public static void main(String[] args) {
-        InMemoryTaskManager taskInMemoryTaskManager = new InMemoryTaskManager();
+        TaskManager taskInMemoryTaskManager = Managers.getDefault();
 
         Task school = new Task("Сходить в школу", "Описание задачи");
         Task groceries = new Task("Купить продукты", "Описание задачи");
