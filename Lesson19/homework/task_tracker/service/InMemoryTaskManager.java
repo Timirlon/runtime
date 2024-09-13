@@ -77,7 +77,6 @@ public class InMemoryTaskManager implements TaskManager {
         if (tasks.containsKey(id)) {
             tasks.put(id, updatedTask);
             System.out.println("Задача обновлена.");
-            historyManager.add(tasks.get(id));
             return;
         }
         System.out.println("Задача не найдена.");
@@ -86,7 +85,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTaskById (int id) {
         if (tasks.containsKey(id)) {
-            historyManager.add(tasks.get(id));
             tasks.remove(id);
             System.out.println("Задача удалена.");
             return;
@@ -97,7 +95,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeEpicById (int id) {
         if (epics.containsKey(id)) {
-            historyManager.add(epics.get(id));
             epics.remove(id);
             System.out.println("Эпик удален.");
             return;
@@ -108,7 +105,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeSubtaskById (int id) {
         if (subtasks.containsKey(id)) {
-            historyManager.add(subtasks.get(id));
             subtasks.remove(id);
             System.out.println("Подзадача удалена.");
             return;
@@ -121,7 +117,6 @@ public class InMemoryTaskManager implements TaskManager {
         int newId = getUniqueId();
         task.setId(newId);
         tasks.put(newId, task);
-        historyManager.add(task);
     }
 
     @Override
@@ -129,7 +124,6 @@ public class InMemoryTaskManager implements TaskManager {
         int newId = getUniqueId();
         epic.setId(newId);
         epics.put(newId, epic);
-        historyManager.add(epic);
     }
 
     @Override
@@ -138,7 +132,6 @@ public class InMemoryTaskManager implements TaskManager {
             int newId = getUniqueId();
             subtask.setId(newId);
             subtasks.put(newId, subtask);
-            historyManager.add(subtask);
             return;
         }
         System.out.println("Эпик не найден.");
