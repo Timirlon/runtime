@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Managers {
-    private static final String FILE_PATH = "Lesson19\\homework\\for_task_tracker\\history.csv";
+    private static final String FILE_PATH = "Lesson19\\homework\\task_tracker\\files\\history.csv";
 
     private Managers() {
 

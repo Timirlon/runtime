@@ -11,9 +11,8 @@ public class Subtask extends Task {
     }
 
     public Subtask(int id, String title, String description, Status status, Epic epic) {
-        super(id, title, description, status);
-        this.epic = epic;
-        type = Type.SUBTASK;
+        this(title, description, epic);
+        this.status = status;
     }
 
     public Epic getEpic () {

@@ -18,18 +18,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             writer.write("id,type,name,status,description,epic\n");
 
-            for (Map.Entry<Integer, Task> entrySet : getTasks().entrySet()) {
-                writer.write(entrySet.getValue().toString());
-                writer.write("\n");
-            }
+            for (int i = 1; i <= uniqueId; i++) {
+                Task task = getTaskFromAnyMap(i);
 
-            for (Map.Entry<Integer, Epic> entrySet : getEpics().entrySet()) {
-                writer.write(entrySet.getValue().toString());
-                writer.write("\n");
-            }
+                if (task == null) {
+                    continue;
+                }
 
-            for (Map.Entry<Integer, Subtask> entrySet : getSubtasks().entrySet()) {
-                writer.write(entrySet.getValue().toString());
+                writer.write(task.toString());
                 writer.write("\n");
             }
 
@@ -45,19 +41,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     Task getTaskFromAnyMap(int id) {
-        Task task;
-
         if (tasks.containsKey(id)) {
-            task = tasks.get(id);
+            return tasks.get(id);
         } else if (epics.containsKey(id)) {
-            task = epics.get(id);
+            return epics.get(id);
         } else if (subtasks.containsKey(id)) {
-            task = subtasks.get(id);
-        } else {
-            return null;
+            return subtasks.get(id);
         }
 
-        return task;
+        return null;
     }
 
     Task getTaskFromString(String value) {
@@ -67,6 +59,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = split[2];
         Status status = Status.valueOf(split[3]);
         String description = split[4];
+
+        uniqueId = taskId + 1;
+
         Task task;
         switch (type) {
             case TASK:
@@ -120,12 +115,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         bufferedReader.readLine();
 
         while (bufferedReader.ready()) {
-            Task task;
-            try {
-                task = fbtm.getTaskFromString(bufferedReader.readLine());
-            } catch (NumberFormatException e) {
+            String restoredTask = bufferedReader.readLine();
+
+            if (restoredTask.isBlank()) {
                 break;
             }
+
+            Task task = fbtm.getTaskFromString(restoredTask);
 
             switch (task.getType()) {
                 case TASK:
@@ -140,15 +136,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
         }
 
-        List<Integer> protoHistory;
+        String protoHistory = bufferedReader.readLine();
 
-        try {
-            protoHistory = historyFromString(bufferedReader.readLine());
-        } catch (NullPointerException e) {
+        if (protoHistory.isBlank()) {
             return fbtm;
         }
 
-        for (int taskId : protoHistory) {
+        for (int taskId : historyFromString(protoHistory)) {
             fbtm.historyManager.add(fbtm.getTaskFromAnyMap(taskId));
         }
 
@@ -223,9 +217,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public static void main(String[] args) throws IOException {
         FileBackedTaskManager fbtm = loadFromFile(Managers.getPath());
 
-        fbtm.getTaskById(2);
-        fbtm.getSubtaskById(6);
-        fbtm.getEpicById(4);
+        fbtm.getSubtaskById(9);
+
         System.out.println(fbtm.getHistory());
     }
 }

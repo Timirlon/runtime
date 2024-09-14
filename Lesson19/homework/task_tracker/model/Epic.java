@@ -20,6 +20,10 @@ public class Epic extends Task {
         return subtasks;
     }
 
+    public void addSubtask(Subtask subtask) {
+        subtasks.add(subtask);
+    }
+
     public void setStatusForEpic () {
         int newStatus = 0;
         int doneStatus = 0;

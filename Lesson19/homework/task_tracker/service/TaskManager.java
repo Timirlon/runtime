@@ -1,20 +1,18 @@
 package Lesson19.homework.task_tracker.service;
 
-import Lesson19.homework.task_tracker.model.Epic;
-import Lesson19.homework.task_tracker.model.Subtask;
-import Lesson19.homework.task_tracker.model.Task;
+import Lesson19.homework.task_tracker.model.*;
 
-import java.util.Map;
+import java.util.Collection;
 import java.util.List;
 
 public interface TaskManager {
     List<Task> getHistory();
 
-    Map<Integer, Task> getTasks();
+    Collection<Task> getTasks();
 
-    Map<Integer, Epic> getEpics();
+    Collection<Epic> getEpics();
 
-    Map<Integer, Subtask> getSubtasks();
+    Collection<Subtask> getSubtasks();
 
     void removeAll();
 

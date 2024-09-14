@@ -1,15 +1,10 @@
 package Lesson19.homework.task_tracker.service;
 
-import Lesson19.homework.task_tracker.model.Epic;
-import Lesson19.homework.task_tracker.model.Subtask;
-import Lesson19.homework.task_tracker.model.Task;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
+import Lesson19.homework.task_tracker.model.*;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int uniqueId = 1;
+    protected int uniqueId = 1;
     protected Map<Integer, Task> tasks = new HashMap<>();;
     protected Map<Integer, Epic> epics = new HashMap<>();
     protected Map<Integer, Subtask> subtasks = new HashMap<>();
@@ -21,18 +16,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Map<Integer, Task> getTasks() {
-        return tasks;
+    public Collection<Task> getTasks() {
+        return tasks.values();
     }
 
     @Override
-    public Map<Integer, Epic> getEpics() {
-        return epics;
+    public Collection<Epic> getEpics() {
+        return epics.values();
     }
 
     @Override
-    public Map<Integer, Subtask> getSubtasks() {
-        return subtasks;
+    public Collection<Subtask> getSubtasks() {
+        return subtasks.values();
     }
 
     @Override
