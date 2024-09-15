@@ -41,4 +41,53 @@ public class BankAccount {
     public String[] getFullName() {
         return new String[]{firstName, secondName};
     }
+
+    public void addToBalance(int amount) {
+        this.amount += amount;
+    }
+
+    public void withdraw(int amount) {
+        if (this.amount == null) {
+            throw new IllegalStateException("Счёт не активирован.");
+        }
+
+        if (this.amount < amount) {
+            throw new IllegalStateException("Недостаточно средств для транзакции.");
+        }
+
+        if (isBlocked) {
+            throw new IllegalStateException("Счёт заблокирован.");
+        }
+
+        this.amount -= amount;
+    }
+
+    public void transfer(BankAccount otherAccount, int amount) {
+        if (this.amount == null) {
+            throw new IllegalStateException("Ваш счёт не активирован.");
+        }
+
+        if (amount <= 0) {
+            throw new IllegalStateException("Введена некорректная сумма для перевода.");
+        }
+
+        if (this.amount < amount) {
+            throw new IllegalStateException("Недостаточно средств для транзакции.");
+        }
+
+        if (isBlocked) {
+            throw new IllegalStateException("Ваш счёт заблокирован.");
+        }
+
+        if (otherAccount.amount == null) {
+            throw new IllegalStateException("Cчёт получателя не активирован.");
+        }
+
+        if (otherAccount.isBlocked) {
+            throw new IllegalStateException("Cчёт получателя заблокирован.");
+        }
+
+        this.amount -= amount;
+        otherAccount.amount += amount;
+    }
 }
