@@ -1,10 +1,6 @@
-package Lesson19.homework.task_tracker.test;
+package Lesson19.homework.task_tracker;
 
-import Lesson19.homework.task_tracker.model.Epic;
-import Lesson19.homework.task_tracker.model.Status;
-import Lesson19.homework.task_tracker.model.Subtask;
-import Lesson19.homework.task_tracker.model.Task;
-import Lesson19.homework.task_tracker.service.InMemoryTaskManager;
+import Lesson19.homework.task_tracker.model.*;
 import Lesson19.homework.task_tracker.service.TaskManager;
 import Lesson19.homework.task_tracker.utils.Managers;
 
