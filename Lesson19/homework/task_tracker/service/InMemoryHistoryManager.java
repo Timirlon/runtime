@@ -1,11 +1,7 @@
 package Lesson19.homework.task_tracker.service;
 
 import Lesson19.homework.task_tracker.model.Task;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, Node> nodeMap = new HashMap<>();

@@ -1,11 +1,15 @@
 package Lesson19.homework.task_tracker.model;
 
+import java.time.LocalDateTime;
+
 public class Task {
     protected int id;
     protected String title;
     protected String description;
     protected Status status;
     protected Type type;
+    protected int duration;
+    protected LocalDateTime startTime;
 
     public Task(String title, String description) {
         this.title = title;
@@ -60,6 +64,10 @@ public class Task {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plusMinutes(duration);
     }
 
     @Override

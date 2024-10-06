@@ -1,5 +1,6 @@
 package Lesson19.homework.task_tracker.service;
 
+import Lesson19.homework.task_tracker.exceptions.ManagerSaveException;
 import Lesson19.homework.task_tracker.model.*;
 import Lesson19.homework.task_tracker.utils.*;
 import java.io.*;
@@ -40,7 +41,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    Task getTaskFromAnyMap(int id) {
+    private Task getTaskFromAnyMap(int id) {
         if (tasks.containsKey(id)) {
             return tasks.get(id);
         } else if (epics.containsKey(id)) {
@@ -77,8 +78,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             default:
                 return null;
         }
-        task.setId(taskId);
-        task.setStatus(status);
 
         return task;
     }

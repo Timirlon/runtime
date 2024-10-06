@@ -1,7 +1,6 @@
 package Lesson19.homework.task_tracker.service;
 
 import Lesson19.homework.task_tracker.model.*;
-
 import java.util.Collection;
 import java.util.List;
 
