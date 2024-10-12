@@ -20,7 +20,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             writer.write("id,type,name,status,description,epic\n");
 
             for (int i = 1; i <= uniqueId; i++) {
-                Task task = getTaskFromAnyMap(i);
+                Task task = get(i);
 
                 if (task == null) {
                     continue;
@@ -41,16 +41,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    private Task getTaskFromAnyMap(int id) {
+
+    private Task get(int id) {
+        Task requestedTask;
+
         if (tasks.containsKey(id)) {
-            return tasks.get(id);
+            requestedTask = tasks.get(id);
         } else if (epics.containsKey(id)) {
-            return epics.get(id);
-        } else if (subtasks.containsKey(id)) {
-            return subtasks.get(id);
+            requestedTask = epics.get(id);
+        } else {
+            requestedTask = subtasks.get(id);
         }
 
-        return null;
+        return requestedTask;
     }
 
     Task getTaskFromString(String value) {
@@ -142,7 +145,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         for (int taskId : historyFromString(protoHistory)) {
-            fbtm.historyManager.add(fbtm.getTaskFromAnyMap(taskId));
+            fbtm.historyManager.add(fbtm.get(taskId));
         }
 
         bufferedReader.close();
@@ -151,73 +154,79 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createSubtask(Subtask subtask) {
-        super.createSubtask(subtask);
+    public Task createTask(Task task) {
+        Task newTask = super.createTask(task);
         save();
+
+        return newTask;
     }
 
     @Override
-    public void createTask(Task task) {
-        super.createTask(task);
+    public Epic createEpic(Epic epic) {
+        Epic newEpic = super.createEpic(epic);
         save();
+
+        return newEpic;
     }
 
     @Override
-    public void createEpic(Epic epic) {
-        super.createEpic(epic);
+    public Subtask createSubtask(Subtask subtask) {
+        Subtask newSubtask = super.createSubtask(subtask);
         save();
+
+        return newSubtask;
     }
 
     @Override
-    public Task getTaskById(int id) {
-        Task task = super.getTaskById(id);
+    public Task getTask(int id) {
+        Task task = super.getTask(id);
         save();
+
         return task;
     }
 
     @Override
-    public Epic getEpicById(int id) {
-        Epic epic = super.getEpicById(id);
+    public Epic getEpic(int id) {
+        Epic epic = super.getEpic(id);
         save();
         return epic;
     }
 
     @Override
-    public Subtask getSubtaskById(int id) {
-        Subtask subtask = super.getSubtaskById(id);
+    public Subtask getSubtask(int id) {
+        Subtask subtask = super.getSubtask(id);
         save();
         return subtask;
     }
 
     @Override
-    public void update(int id, Task updatedTask) {
-        super.update(id, updatedTask);
+    public Task update(int id, Task updatedValue) {
+        Task updatedTask = super.update(id, updatedValue);
         save();
+        return updatedTask;
     }
 
     @Override
-    public void removeTaskById(int id) {
-        super.removeTaskById(id);
+    public Task removeTask(int id) {
+        Task removedTask = super.removeTask(id);
         save();
+
+        return removedTask;
     }
 
     @Override
-    public void removeEpicById(int id) {
-        super.removeEpicById(id);
+    public Epic removeEpic(int id) {
+        Epic removedEpic = super.removeEpic(id);
         save();
+
+        return removedEpic;
     }
 
     @Override
-    public void removeSubtaskById(int id) {
-        super.removeSubtaskById(id);
+    public Subtask removeSubtask(int id) {
+        Subtask removedSubtask = super.removeSubtask(id);
         save();
-    }
 
-    public static void main(String[] args) throws IOException {
-        FileBackedTaskManager fbtm = loadFromFile(Managers.getPath());
-
-        fbtm.getSubtaskById(9);
-
-        System.out.println(fbtm.getHistory());
+        return removedSubtask;
     }
 }

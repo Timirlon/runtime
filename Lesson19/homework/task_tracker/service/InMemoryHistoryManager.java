@@ -24,6 +24,10 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
+        if (task == null) {
+            return;
+        }
+
         if (nodeMap.containsValue(task.getId())) {
             remove(task.getId());
         }
@@ -86,5 +90,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         currentHistorySize--;
+    }
+
+    @Override
+    public void removeAll() {
+        for (Map.Entry<Integer, Node> entry : nodeMap.entrySet()) {
+            remove(entry.getKey());
+        }
     }
 }

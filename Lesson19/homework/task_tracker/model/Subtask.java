@@ -15,7 +15,7 @@ public class Subtask extends Task {
         this.status = status;
     }
 
-    public Epic getEpic () {
+    public Epic getEpic() {
         return epic;
     }
 

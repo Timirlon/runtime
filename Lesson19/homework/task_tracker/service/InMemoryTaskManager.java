@@ -5,7 +5,7 @@ import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     protected int uniqueId = 1;
-    protected Map<Integer, Task> tasks = new HashMap<>();;
+    protected Map<Integer, Task> tasks = new HashMap<>();
     protected Map<Integer, Epic> epics = new HashMap<>();
     protected Map<Integer, Subtask> subtasks = new HashMap<>();
     protected HistoryManager historyManager = new InMemoryHistoryManager();
@@ -35,91 +35,89 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.clear();
         epics.clear();
         subtasks.clear();
-        getHistory().clear();
+        historyManager.removeAll();
     }
 
     @Override
-    public Task getTaskById(int id) {
-        historyManager.add(tasks.get(id));
-        return tasks.get(id);
+    public Task getTask(int id) {
+        Task requestedTask = tasks.get(id);
+        historyManager.add(requestedTask);
 
+        return requestedTask;
     }
 
     @Override
-    public Epic getEpicById(int id) {
-        historyManager.add(epics.get(id));
-        return epics.get(id);
+    public Epic getEpic(int id) {
+        Epic requestedEpic = epics.get(id);
+        historyManager.add(requestedEpic);
+
+        return requestedEpic;
     }
 
     @Override
-    public Subtask getSubtaskById(int id) {
-        historyManager.add(subtasks.get(id));
-        return subtasks.get(id);
+    public Subtask getSubtask(int id) {
+        Subtask requestedSubtask = subtasks.get(id);
+        historyManager.add(requestedSubtask);
+
+        return requestedSubtask;
     }
 
     @Override
-    public void update (int id, Task updatedTask) {
+    public Task update(int id, Task updatedValue) {
+        Task updatedTask;
+
         if (tasks.containsKey(id)) {
-            tasks.put(id, updatedTask);
-            System.out.println("Задача обновлена.");
-            return;
+            updatedTask = tasks.put(id, updatedValue);
+        } else if (epics.containsKey(id)) {
+            updatedTask = epics.put(id, (Epic) updatedValue);
+        } else {
+            updatedTask = subtasks.put(id, (Subtask) updatedValue);
         }
-        System.out.println("Задача не найдена.");
+
+        return updatedTask;
     }
 
     @Override
-    public void removeTaskById (int id) {
-        if (tasks.containsKey(id)) {
-            tasks.remove(id);
-            System.out.println("Задача удалена.");
-            return;
-        }
-        System.out.println("Задача не найдена.");
+    public Task removeTask(int id) {
+        return tasks.remove(id);
     }
 
     @Override
-    public void removeEpicById (int id) {
-        if (epics.containsKey(id)) {
-            epics.remove(id);
-            System.out.println("Эпик удален.");
-            return;
-        }
-        System.out.println("Эпик не найден.");
+    public Epic removeEpic(int id) {
+        return epics.remove(id);
     }
 
     @Override
-    public void removeSubtaskById (int id) {
-        if (subtasks.containsKey(id)) {
-            subtasks.remove(id);
-            System.out.println("Подзадача удалена.");
-            return;
-        }
-        System.out.println("Подзадача не найден.");
+    public Subtask removeSubtask(int id) {
+        return subtasks.remove(id);
     }
 
     @Override
-    public void createTask(Task task) {
+    public Task createTask(Task task) {
         int newId = getUniqueId();
         task.setId(newId);
-        tasks.put(newId, task);
+
+        return tasks.put(newId, task);
     }
 
     @Override
-    public void createEpic(Epic epic) {
+    public Epic createEpic(Epic epic) {
         int newId = getUniqueId();
         epic.setId(newId);
-        epics.put(newId, epic);
+
+        return epics.put(newId, epic);
     }
 
     @Override
-    public void createSubtask(Subtask subtask) {
+    public Subtask createSubtask(Subtask subtask) {
         if (epics.containsValue(subtask.getEpic())) {
             int newId = getUniqueId();
             subtask.setId(newId);
-            subtasks.put(newId, subtask);
-            return;
+
+            return subtasks.put(newId, subtask);
         }
-        System.out.println("Эпик не найден.");
+
+        return null;
     }
 
     @Override
