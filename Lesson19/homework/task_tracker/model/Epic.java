@@ -1,5 +1,6 @@
 package Lesson19.homework.task_tracker.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -8,12 +9,11 @@ public class Epic extends Task {
     public Epic(String title, String description) {
         super(title, description);
         this.setStatusForEpic();
-        setType(Type.EPIC);
+        type = Type.EPIC;
     }
 
     public Epic(int id, String title, String description, Status status) {
         super(id, title, description, status);
-        this.type = Type.EPIC;
     }
 
     public ArrayList<Subtask> getSubtasks() {
@@ -22,9 +22,10 @@ public class Epic extends Task {
 
     public void addSubtask(Subtask subtask) {
         subtasks.add(subtask);
+        setStatusForEpic();
     }
 
-    public void setStatusForEpic () {
+    protected void setStatusForEpic () {
         int newStatus = 0;
         int doneStatus = 0;
         if (subtasks.isEmpty()) {
@@ -47,5 +48,39 @@ public class Epic extends Task {
         } else {
             this.setStatus(Status.IN_PROGRESS);
         }
+    }
+
+
+    public void setStartTimeForEpic() {
+        LocalDateTime earliestStartTime = subtasks.get(0).getStartTime();
+
+        if (earliestStartTime == null) {
+            return;
+        }
+
+        for (Subtask subtask : subtasks) {
+            LocalDateTime someStartTime = subtask.getStartTime();
+
+            if (someStartTime.isBefore(earliestStartTime)) {
+                earliestStartTime = someStartTime;
+            }
+        }
+
+        startTime = earliestStartTime;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        LocalDateTime latestEndTime = subtasks.get(0).getEndTime();
+
+        for (Subtask subtask : subtasks) {
+            LocalDateTime someEndTime = subtask.getEndTime();
+
+            if (someEndTime.isAfter(latestEndTime)) {
+                latestEndTime = someEndTime;
+            }
+        }
+
+        return latestEndTime;
     }
 }

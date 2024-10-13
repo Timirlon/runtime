@@ -13,6 +13,8 @@ public interface TaskManager {
 
     Collection<Subtask> getSubtasks();
 
+    List<Task> getPrioritizedTasks();
+
     void removeAll();
 
     Task getTask(int id);

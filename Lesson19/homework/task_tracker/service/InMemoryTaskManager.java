@@ -1,6 +1,9 @@
 package Lesson19.homework.task_tracker.service;
 
 import Lesson19.homework.task_tracker.model.*;
+import Lesson19.homework.task_tracker.utils.StartTimeComparator;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -31,11 +34,38 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public List<Task> getPrioritizedTasks() {
+        List<Task> prioritizedTasks = new ArrayList<>();
+
+        prioritizedTasks.addAll(getTasks());
+        prioritizedTasks.addAll(getEpics());
+        prioritizedTasks.addAll(getSubtasks());
+
+        prioritizedTasks.sort(new StartTimeComparator());
+
+        return prioritizedTasks;
+    }
+
+    @Override
     public void removeAll() {
         tasks.clear();
         epics.clear();
         subtasks.clear();
         historyManager.removeAll();
+    }
+
+    protected Task get(int id) {
+        Task requestedTask;
+
+        if (tasks.containsKey(id)) {
+            requestedTask = tasks.get(id);
+        } else if (epics.containsKey(id)) {
+            requestedTask = epics.get(id);
+        } else {
+            requestedTask = subtasks.get(id);
+        }
+
+        return requestedTask;
     }
 
     @Override
@@ -66,13 +96,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Task update(int id, Task updatedValue) {
         Task updatedTask;
 
-        if (tasks.containsKey(id)) {
-            updatedTask = tasks.put(id, updatedValue);
-        } else if (epics.containsKey(id)) {
-            updatedTask = epics.put(id, (Epic) updatedValue);
-        } else {
-            updatedTask = subtasks.put(id, (Subtask) updatedValue);
-        }
+        updatedTask = get(id);
 
         return updatedTask;
     }
@@ -84,11 +108,25 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic removeEpic(int id) {
+        Epic epic = epics.get(id);
+
+        if (epic != null) {
+            for (Subtask subtask : epic.getSubtasks()) {
+                subtasks.remove(subtask.getId());
+            }
+        }
+
         return epics.remove(id);
     }
 
     @Override
     public Subtask removeSubtask(int id) {
+        Subtask subtask = subtasks.get(id);
+
+        if (subtask != null) {
+            subtask.getEpic().getSubtasks().remove(subtask);
+        }
+
         return subtasks.remove(id);
     }
 

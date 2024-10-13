@@ -1,6 +1,7 @@
-package Lesson19.homework.task_tracker.service;
+package Lesson19.homework.task_tracker.test;
 
 import Lesson19.homework.task_tracker.model.*;
+import Lesson19.homework.task_tracker.service.TaskManager;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -164,14 +165,79 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void removeTaskMethodShouldReturnNullIfGivenInvalidIndex() {
-        assertNull(taskManager.removeTask(2));
+        int invalidId = 2;
+        assertNull(taskManager.removeTask(invalidId));
     }
 
     @Test
-    public void someTest() {
+    public void removeTaskMethodShouldRunSuccessfullyIfAllConditionsAreMet() {
         Task task = new Task("test", "test");
 
         taskManager.createTask(task);
-        assertEquals(task, taskManager.removeTask(1));
+
+        int numberOfTasks = taskManager.getTasks().size();
+
+        assertEquals(task, taskManager.removeTask(task.getId()));
+        assertEquals(numberOfTasks - 1, taskManager.getTasks().size());
     }
+
+    @Test
+    public void removeEpicMethodShouldReturnNullIfGivenInvalidIndex() {
+        int invalidId = 2;
+        assertNull(taskManager.removeEpic(invalidId));
+    }
+
+    @Test
+    public void removeEpicMethodShouldRunSuccesfullyIfAllConditionsAreMet() {
+        Epic epic = new Epic("test", "test");
+
+        taskManager.createEpic(epic);
+
+        int numberOfEpics = taskManager.getEpics().size();
+
+        assertEquals(epic, taskManager.removeEpic(epic.getId()));
+        assertEquals(numberOfEpics - 1, taskManager.getEpics().size());
+        assertFalse(taskManager.getEpics().contains(epic));
+    }
+
+    @Test
+    public void removeEpicMethodShouldRemoveEverySubtaskAssociatedWithGivenEpic() {
+        Epic epic = new Epic("test", "test");
+        Subtask subtask = new Subtask("subtask-test", "subtask-test", epic);
+
+        taskManager.createEpic(epic);
+        taskManager.createSubtask(subtask);
+
+        int numberOfSubtasks = taskManager.getSubtasks().size();
+
+        taskManager.removeEpic(epic.getId());
+
+        assertFalse(taskManager.getSubtasks().contains(subtask));
+        assertEquals(numberOfSubtasks - 1, taskManager.getSubtasks().size());
+    }
+
+    @Test
+    public void removeSubtaskMethodShouldReturnNullIfGivenIncorrectIndex() {
+        int invalidId = 1;
+        assertNull(taskManager.removeSubtask(invalidId));
+    }
+
+    @Test
+    public void removeSubtaskMethodShouldRunSuccessfullyIfConditionsAreMet() {
+        Epic epic = new Epic("epic-test", "epic-test");
+        Subtask subtask = new Subtask("subtask-test", "subtask-test", epic);
+
+        taskManager.createEpic(epic);
+        taskManager.createSubtask(subtask);
+        int subtasksNumInManager = taskManager.getSubtasks().size();
+        int subtasksNumInEpic = epic.getSubtasks().size();
+
+        assertEquals(subtask, taskManager.removeSubtask(subtask.getId()));
+        assertFalse(taskManager.getSubtasks().contains(subtask));
+        assertEquals(subtasksNumInManager - 1, taskManager.getSubtasks().size());
+        assertFalse(epic.getSubtasks().contains(subtask));
+        assertEquals(subtasksNumInEpic - 1, epic.getSubtasks().size());
+    }
+
+
 }

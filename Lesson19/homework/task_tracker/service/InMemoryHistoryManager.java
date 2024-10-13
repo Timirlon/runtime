@@ -10,7 +10,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private int currentHistorySize = 0;
     private static final int MAX_HISTORY_SIZE = 10;
 
-    class Node {
+    static class Node {
         public Task data;
         public Node next;
         public Node prev;

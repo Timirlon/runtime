@@ -8,14 +8,20 @@ public class Task {
     protected String description;
     protected Status status;
     protected Type type;
-    protected int duration;
     protected LocalDateTime startTime;
+    protected int duration;
 
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
         type = Type.TASK;
+    }
+
+    public Task(String title, String description, LocalDateTime startTime, int duration) {
+        this(title, description);
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public Task(int id, String title, String description, Status status) {
@@ -64,6 +70,22 @@ public class Task {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime =  startTime;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 
     public LocalDateTime getEndTime() {

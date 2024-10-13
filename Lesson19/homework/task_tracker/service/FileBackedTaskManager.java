@@ -2,7 +2,6 @@ package Lesson19.homework.task_tracker.service;
 
 import Lesson19.homework.task_tracker.exceptions.ManagerSaveException;
 import Lesson19.homework.task_tracker.model.*;
-import Lesson19.homework.task_tracker.utils.*;
 import java.io.*;
 import java.nio.file.Path;
 import java.util.*;
@@ -17,7 +16,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try {
             Writer writer = new FileWriter(path.toFile());
 
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write("id,type,name,status,description,startTime,epic\n");
 
             for (int i = 1; i <= uniqueId; i++) {
                 Task task = get(i);
@@ -41,22 +40,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-
-    private Task get(int id) {
-        Task requestedTask;
-
-        if (tasks.containsKey(id)) {
-            requestedTask = tasks.get(id);
-        } else if (epics.containsKey(id)) {
-            requestedTask = epics.get(id);
-        } else {
-            requestedTask = subtasks.get(id);
-        }
-
-        return requestedTask;
-    }
-
-    Task getTaskFromString(String value) {
+    private Task getTaskFromString(String value) {
         String[] split = value.split(",");
         int taskId = Integer.parseInt(split[0]);
         Type type = Type.valueOf(split[1]);
@@ -66,7 +50,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         uniqueId = taskId + 1;
 
-        Task task;
+        Task task = null;
         switch (type) {
             case TASK:
                 task = new Task(taskId, name, description, status);
@@ -77,9 +61,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             case SUBTASK:
                 int epicId = Integer.parseInt(split[5]);
                 task = new Subtask(taskId ,name, description, status, epics.get(epicId));
-                break;
-            default:
-                return null;
         }
 
         return task;
@@ -112,7 +93,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     static FileBackedTaskManager loadFromFile(Path path) throws IOException {
-        FileBackedTaskManager fbtm = new FileBackedTaskManager(path);
+        FileBackedTaskManager taskManager = new FileBackedTaskManager(path);
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()));
         bufferedReader.readLine();
 
@@ -123,17 +104,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 break;
             }
 
-            Task task = fbtm.getTaskFromString(restoredTask);
+            Task task = taskManager.getTaskFromString(restoredTask);
 
             switch (task.getType()) {
                 case TASK:
-                    fbtm.tasks.put(task.getId(), task);
+                    taskManager.tasks.put(task.getId(), task);
                     break;
                 case EPIC:
-                    fbtm.epics.put(task.getId(), (Epic) task);
+                    taskManager.epics.put(task.getId(), (Epic) task);
                     break;
                 case SUBTASK:
-                    fbtm.subtasks.put(task.getId(), (Subtask) task);
+                    taskManager.subtasks.put(task.getId(), (Subtask) task);
                     break;
             }
         }
@@ -141,16 +122,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String protoHistory = bufferedReader.readLine();
 
         if (protoHistory.isBlank()) {
-            return fbtm;
+            return taskManager;
         }
 
         for (int taskId : historyFromString(protoHistory)) {
-            fbtm.historyManager.add(fbtm.get(taskId));
+            taskManager.historyManager.add(taskManager.get(taskId));
         }
 
         bufferedReader.close();
 
-        return fbtm;
+        return taskManager;
     }
 
     @Override
