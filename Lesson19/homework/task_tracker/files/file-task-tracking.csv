@@ -1,0 +1,5 @@
+id,type,name,status,description,startTime,duration,epic
+3,TASK,Купить продукты,NEW,Описание задачи,2024-09-27T05:00,60
+2,TASK,Сходить в школу,NEW,Описание задачи,2024-10-02T10:00,300
+1,EPIC,Убраться дома,NEW,Описание эпика,null,0
+

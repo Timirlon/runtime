@@ -5,6 +5,6 @@ import Lesson19.homework.task_tracker.utils.Managers;
 
 public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     public FileBackedTaskManagerTest() {
-        super(Managers.getDefault());
+        super(new FileBackedTaskManager(Managers.getTestPath()));
     }
 }

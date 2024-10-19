@@ -1,4 +1,4 @@
-package Lesson19.homework.task_tracker.model;
+package Lesson19.homework.task_tracker.test;
 
 import Lesson19.homework.task_tracker.model.*;
 import org.junit.jupiter.api.BeforeEach;

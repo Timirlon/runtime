@@ -1,19 +1,27 @@
 package Lesson19.homework.task_tracker.model;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class Epic extends Task {
     private final ArrayList<Subtask> subtasks = new ArrayList<>();
+    protected LocalDateTime endTime;
 
     public Epic(String title, String description) {
         super(title, description);
-        this.setStatusForEpic();
-        type = Type.EPIC;
+        this.setStatus();
+        setType(Type.EPIC);
     }
 
     public Epic(int id, String title, String description, Status status) {
         super(id, title, description, status);
+        setType(Type.EPIC);
+    }
+
+    public Epic(int id, String title, String description, Status status, LocalDateTime startTime, int duration) {
+        super(id, title, description, status, startTime, duration);
+        setType(Type.EPIC);
     }
 
     public ArrayList<Subtask> getSubtasks() {
@@ -22,10 +30,13 @@ public class Epic extends Task {
 
     public void addSubtask(Subtask subtask) {
         subtasks.add(subtask);
-        setStatusForEpic();
+        setStatus();
+        setStartTime(subtask.getStartTime());
+        setEndTime(subtask.getEndTime());
+        setDuration();
     }
 
-    protected void setStatusForEpic () {
+    protected void setStatus() {
         int newStatus = 0;
         int doneStatus = 0;
         if (subtasks.isEmpty()) {
@@ -50,37 +61,35 @@ public class Epic extends Task {
         }
     }
 
+    private void setDuration() {
+        long minutes = getStartTime().until(endTime, ChronoUnit.MINUTES);
 
-    public void setStartTimeForEpic() {
-        LocalDateTime earliestStartTime = subtasks.get(0).getStartTime();
+        super.setDuration((int) minutes);
+    }
 
-        if (earliestStartTime == null) {
+    @Override
+    public void setStartTime(LocalDateTime subtaskStartTime) {
+        if (subtaskStartTime == null) {
             return;
         }
 
-        for (Subtask subtask : subtasks) {
-            LocalDateTime someStartTime = subtask.getStartTime();
+        if (this.getStartTime() == null || subtaskStartTime.isBefore(this.getStartTime())) {
+            super.setStartTime(subtaskStartTime);
+        }
+    }
 
-            if (someStartTime.isBefore(earliestStartTime)) {
-                earliestStartTime = someStartTime;
-            }
+    private void setEndTime(LocalDateTime subtaskEndTime) {
+        if (subtaskEndTime == null) {
+            return;
         }
 
-        startTime = earliestStartTime;
+        if (endTime == null || subtaskEndTime.isAfter(endTime)) {
+            endTime = subtaskEndTime;
+        }
     }
 
     @Override
     public LocalDateTime getEndTime() {
-        LocalDateTime latestEndTime = subtasks.get(0).getEndTime();
-
-        for (Subtask subtask : subtasks) {
-            LocalDateTime someEndTime = subtask.getEndTime();
-
-            if (someEndTime.isAfter(latestEndTime)) {
-                latestEndTime = someEndTime;
-            }
-        }
-
-        return latestEndTime;
+        return endTime;
     }
 }

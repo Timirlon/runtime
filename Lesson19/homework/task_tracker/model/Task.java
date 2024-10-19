@@ -3,25 +3,26 @@ package Lesson19.homework.task_tracker.model;
 import java.time.LocalDateTime;
 
 public class Task {
-    protected int id;
-    protected String title;
-    protected String description;
-    protected Status status;
-    protected Type type;
-    protected LocalDateTime startTime;
-    protected int duration;
+    private int id;
+    private String title;
+    private String description;
+    private Status status;
+    private Type type;
+    private LocalDateTime startTime;
+    private int duration;
 
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
-        type = Type.TASK;
+        this.type = Type.TASK;
     }
 
     public Task(String title, String description, LocalDateTime startTime, int duration) {
         this(title, description);
         this.startTime = startTime;
         this.duration = duration;
+        this.type = Type.TASK;
     }
 
     public Task(int id, String title, String description, Status status) {
@@ -30,6 +31,16 @@ public class Task {
         this.description = description;
         this.status = status;
         this.type = Type.TASK;
+    }
+
+    public Task(int id, String title, String description, Status status, LocalDateTime startTime, int duration) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.type = Type.TASK;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public int getId() {
@@ -94,6 +105,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return getId() + "," + getType() + "," + getTitle() + "," + getStatus() + "," + getDescription();
+        return getId() + "," + getType() + "," + getTitle() + "," + getStatus() + "," + getDescription() + "," + getStartTime() + "," + getDuration();
     }
 }

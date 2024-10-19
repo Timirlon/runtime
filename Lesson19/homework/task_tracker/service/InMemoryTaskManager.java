@@ -2,8 +2,6 @@ package Lesson19.homework.task_tracker.service;
 
 import Lesson19.homework.task_tracker.model.*;
 import Lesson19.homework.task_tracker.utils.StartTimeComparator;
-
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -132,6 +130,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task createTask(Task task) {
+        if (!isTaskTimeNotIntersecting(task)) {
+            return null;
+        }
+
         int newId = getUniqueId();
         task.setId(newId);
         tasks.put(newId, task);
@@ -141,6 +143,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic createEpic(Epic epic) {
+        if (!isTaskTimeNotIntersecting(epic)) {
+            return null;
+        }
+
         int newId = getUniqueId();
         epic.setId(newId);
         epics.put(newId, epic);
@@ -150,6 +156,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask createSubtask(Subtask subtask) {
+        if (!isTaskTimeNotIntersecting(subtask)) {
+            return null;
+        }
+
         if (epics.containsValue(subtask.getEpic())) {
             int newId = getUniqueId();
             subtask.setId(newId);
@@ -168,5 +178,51 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int getUniqueId() {
         return uniqueId++;
+    }
+
+    private boolean isTaskTimeNotIntersecting(Task task) {
+        boolean isNotIntersecting = true;
+
+        for (int i = 1; i < uniqueId; i++) {
+            isNotIntersecting = isTimeOfTwoTasksMutuallyNotIntersecting(task, get(i));
+
+            if (!isNotIntersecting) {
+                break;
+            }
+        }
+
+        return isNotIntersecting;
+    }
+
+    private boolean isTimeOfTwoTasksMutuallyNotIntersecting(Task taskOne, Task taskTwo) {
+        if (taskTwo == null || taskTwo.getStartTime() == null) {
+            return true;
+        }
+
+        if (taskOne.getStartTime() == null) {
+            return false;
+        }
+
+        if (taskOne.getType() == Type.SUBTASK && taskTwo.getType() == Type.EPIC) {
+            Subtask subtask = (Subtask) taskOne;
+
+            if (subtask.getEpic() == taskTwo) {
+                return true;
+            }
+        }
+
+        if (taskOne.getStartTime().equals(taskTwo.getStartTime()) || taskOne.getEndTime().equals(taskTwo.getEndTime())) {
+            return false;
+        }
+
+        if (taskOne.getStartTime().isAfter(taskTwo.getStartTime()) && taskOne.getStartTime().isBefore(taskTwo.getEndTime())) {
+            return false;
+        }
+
+        if (taskOne.getEndTime().isAfter(taskTwo.getStartTime()) && taskOne.getEndTime().isBefore(taskTwo.getEndTime())) {
+            return false;
+        }
+
+        return true;
     }
 }

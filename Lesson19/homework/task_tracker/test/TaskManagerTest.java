@@ -3,6 +3,9 @@ package Lesson19.homework.task_tracker.test;
 import Lesson19.homework.task_tracker.model.*;
 import Lesson19.homework.task_tracker.service.TaskManager;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class TaskManagerTest<T extends TaskManager> {
@@ -239,5 +242,51 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(subtasksNumInEpic - 1, epic.getSubtasks().size());
     }
 
+    @Test
+    public void createTaskShouldReturnNullIfTimeOfGivenTaskIsIntersecting() {
+        Task originalTask = new Task("test", "test", LocalDateTime.of(2024, 10, 17, 12, 0), 120);
+        taskManager.createTask(originalTask);
 
+        Task testTask = new Task("test", "test", LocalDateTime.of(2024, 10, 17, 13, 0), 120);
+        Task result = taskManager.createTask(testTask);
+
+        assertNull(result);
+        assertEquals(1, taskManager.getTasks().size());
+        assertFalse(taskManager.getTasks().contains(testTask));
+    }
+
+    @Test
+    public void createTaskShouldCreateAndReturnGivenTask() {
+        Task task = new Task("test", "test");
+
+        Task returnValue = taskManager.createTask(task);
+
+        assertEquals(task, returnValue);
+        assertEquals(1, taskManager.getTasks().size());
+        assertTrue(taskManager.getTasks().contains(task));
+    }
+
+    @Test
+    public void createEpicShouldCreateAndReturnGivenEpic() {
+        Epic epic = new Epic("test", "test");
+
+        Epic returnValue = taskManager.createEpic(epic);
+
+        assertEquals(epic, returnValue);
+        assertEquals(1, taskManager.getEpics().size());
+        assertTrue(taskManager.getEpics().contains(epic));
+    }
+
+    @Test
+    public void createSubtaskShouldCreateAndReturnGivenSubtask() {
+        Epic epic = new Epic("test", "test");
+        Subtask subtask = new Subtask("test", "test", epic);
+
+        taskManager.createEpic(epic);
+        Subtask returnValue = taskManager.createSubtask(subtask);
+
+        assertEquals(subtask, returnValue);
+        assertEquals(1, taskManager.getSubtasks().size());
+        assertTrue(taskManager.getSubtasks().contains(subtask));
+    }
 }

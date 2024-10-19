@@ -4,6 +4,7 @@ import Lesson19.homework.task_tracker.exceptions.ManagerSaveException;
 import Lesson19.homework.task_tracker.model.*;
 import java.io.*;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -16,10 +17,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try {
             Writer writer = new FileWriter(path.toFile());
 
-            writer.write("id,type,name,status,description,startTime,epic\n");
+            writer.write("id,type,name,status,description,startTime,duration,epic\n");
 
-            for (int i = 1; i <= uniqueId; i++) {
-                Task task = get(i);
+            for (Task task : getPrioritizedTasks()) {
 
                 if (task == null) {
                     continue;
@@ -48,19 +48,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Status status = Status.valueOf(split[3]);
         String description = split[4];
 
-        uniqueId = taskId + 1;
+        LocalDateTime startTime = split[5].equals("null") ? null : LocalDateTime.parse(split[5]);
+
+        int duration = Integer.parseInt(split[6]);
+
+        if (taskId > uniqueId) {
+            uniqueId = taskId + 1;
+        }
 
         Task task = null;
         switch (type) {
             case TASK:
-                task = new Task(taskId, name, description, status);
+                task = new Task(taskId, name, description, status, startTime, duration);
                 break;
             case EPIC:
-                task = new Epic(taskId, name, description, status);
+                task = new Epic(taskId, name, description, status, startTime, duration);
                 break;
             case SUBTASK:
-                int epicId = Integer.parseInt(split[5]);
-                task = new Subtask(taskId ,name, description, status, epics.get(epicId));
+                int epicId = Integer.parseInt(split[7]);
+                task = new Subtask(taskId ,name, description, status, startTime, duration, epics.get(epicId));
         }
 
         return task;
@@ -92,7 +98,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return stringBuilder.toString();
     }
 
-    static FileBackedTaskManager loadFromFile(Path path) throws IOException {
+    public static FileBackedTaskManager loadFromFile(Path path) throws IOException {
         FileBackedTaskManager taskManager = new FileBackedTaskManager(path);
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()));
         bufferedReader.readLine();
@@ -121,7 +127,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         String protoHistory = bufferedReader.readLine();
 
-        if (protoHistory.isBlank()) {
+        if (protoHistory == null || protoHistory.isBlank()) {
             return taskManager;
         }
 

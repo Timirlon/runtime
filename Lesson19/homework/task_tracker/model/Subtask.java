@@ -7,21 +7,34 @@ public class Subtask extends Task {
 
     public Subtask(String title, String description, Epic epic) {
         super(title, description);
+
         this.epic = epic;
         epic.addSubtask(this);
-        type = Type.SUBTASK;
+        setType(Type.SUBTASK);
     }
 
-    public Subtask(String title, String description, Epic epic, LocalDateTime startTime, int duration) {
+    public Subtask(String title, String description, LocalDateTime startTime, int duration, Epic epic) {
         super(title, description, startTime, duration);
+
         this.epic = epic;
         epic.addSubtask(this);
+        setType(Type.SUBTASK);
     }
 
     public Subtask(int id, String title, String description, Status status, Epic epic) {
-        this(title, description, epic);
-        this.id = id;
-        this.status = status;
+        super(id, title, description, status);
+
+        this.epic = epic;
+        epic.addSubtask(this);
+        setType(Type.SUBTASK);
+    }
+
+    public Subtask(int id, String title, String description, Status status, LocalDateTime startTime, int duration, Epic epic) {
+        super(id, title, description, status, startTime, duration);
+
+        this.epic = epic;
+        epic.addSubtask(this);
+        setType(Type.SUBTASK);
     }
 
     public Epic getEpic() {
@@ -31,7 +44,7 @@ public class Subtask extends Task {
     @Override
     public void setStatus(Status status) {
         super.setStatus(status);
-        epic.setStatusForEpic();
+        epic.setStatus();
     }
 
     @Override
