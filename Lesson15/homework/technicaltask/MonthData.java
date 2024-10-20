@@ -1,4 +1,4 @@
-package Lesson15.Homework.technicaltask;
+package Lesson15.homework.technicaltask;
 
 public class MonthData {
     int[] days = new int[30];

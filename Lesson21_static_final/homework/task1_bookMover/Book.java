@@ -8,6 +8,4 @@ public class Book {
         this.title = title;
         status = Status.AVAILABLE;
     }
-
-
 }

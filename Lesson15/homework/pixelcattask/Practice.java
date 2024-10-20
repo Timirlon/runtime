@@ -1,4 +1,4 @@
-package Lesson15.Homework.pixelcattask;
+package Lesson15.homework.pixelcattask;
 
 public class Practice {
     public static void main(String[] args) {
