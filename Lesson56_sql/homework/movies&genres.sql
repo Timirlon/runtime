@@ -14,10 +14,16 @@ GROUP BY g.name
 ORDER BY avg_rating DESC;
 
 -- 3.
-SELECT release_year, MAX(rating) AS max_rating
-FROM movies
-GROUP BY release_year
-ORDER BY release_year;
+SELECT main.release_year, main.title, main.rating
+FROM movies main
+WHERE  id IN (
+    SELECT id
+    FROM movies sub
+    WHERE main.release_year = sub.release_year
+    ORDER BY sub.rating DESC
+    LIMIT 1
+    )
+ORDER BY release_year
 
 -- 4.
 SELECT m.release_year, g.name, COUNT(*) FROM movies m
