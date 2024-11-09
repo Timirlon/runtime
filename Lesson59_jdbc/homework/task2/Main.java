@@ -10,12 +10,19 @@ public class Main {
         String password = "1234";
 
         Connection connection = DriverManager.getConnection(url, username, password);
-        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("1. Процессоры");
-        System.out.println("2. Мониторы");
+        Statement getCategoriesStatement = connection.createStatement();
+        ResultSet categoriesSet = getCategoriesStatement.executeQuery("SELECT * FROM categories");
+
+        while (categoriesSet.next()) {
+            System.out.println(categoriesSet.getInt("id") + ". " + categoriesSet.getString("name"));
+        }
+
+        Scanner scanner = new Scanner(System.in);
         System.out.print("Введите id категории (через запятую и пробел): ");
         String categories = scanner.nextLine();
+
+
         String[] splitCategories = categories.split(", ");
 
         StringBuilder queryBuilder = new StringBuilder("?");
